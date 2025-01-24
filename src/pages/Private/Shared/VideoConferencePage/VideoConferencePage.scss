@@ -90,6 +90,73 @@
         }
       }
     }
+
+    .device-select {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      display: flex;
+      padding-block: 8px;
+      gap: 16px;
+
+      .select-container {
+        width: 30%;
+        position: relative;
+        border-radius: 16px;
+        padding: 4px 8px;
+        cursor: pointer;
+        transition: ease-out 0.5s;
+
+        &:hover {
+          background-color: #e2e2e2;
+          border: 1px solid gray;
+        }
+
+        .value-container {
+          display: flex;
+          gap: 4px;
+          align-items: center;
+
+          span {
+            text-wrap: nowrap;
+            overflow: hidden;
+          }
+        }
+        .options-container {
+          position: absolute;
+          display: none;
+          width: 100%;
+          left: 0;
+          top: 100%;
+          border-radius: 8px;
+          border: 1px solid gray;
+          transition: ease-out 0.5s;
+          padding-block: 4px;
+
+          .option {
+            padding: 4px 8px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            span {
+              text-wrap: nowrap;
+              overflow: hidden;
+            }
+
+            &:hover {
+              background-color: #e2e2e2;
+            }
+          }
+        }
+        .open-dropdown {
+          display: block;
+          box-shadow: 1px 1px 5px gray;
+        }
+      }
+    }
   }
 
   .action-group {

@@ -16,6 +16,10 @@ import { getCourseByLink } from "../../../../api/getCourseByLink";
 import { getMyCourses } from "../../../../api/getMyCourses";
 import { toast } from "react-toastify";
 import { DictionaryContext } from "../../../../contexts/DictionaryContext";
+import { FiMic } from "react-icons/fi";
+import { MdArrowDropDown } from "react-icons/md";
+import { GiCheckMark } from "react-icons/gi";
+import { HiOutlineSpeakerWave } from "react-icons/hi2";
 
 const VideoConferenceRoom = () => {
   const { roomId } = useParams();
@@ -36,6 +40,9 @@ const VideoConferenceRoom = () => {
   const [host, setHost] = useState();
   const [purchased, setPurchased] = useState();
   const [passcode, setPasscode] = useState("");
+  const [cameraId, setCameraId] = useState("");
+  const [micId, setMicId] = useState("");
+  const [speakerId, setSpeakerId] = useState("");
 
   const joinRoom = () => {
     socket.current.emit('join-room', {
@@ -127,6 +134,10 @@ const VideoConferenceRoom = () => {
               newMsg={!chat && newMsg}
               mic={micOn}
               video={videoOn}
+              micId={micId}
+              setMicId={setMicId}
+              cameraId={cameraId}
+              setCameraId={setCameraId}
               style={{width: `calc(100% - ${chat?"20rem":"0"})`}}
             />
           </div>
@@ -141,6 +152,12 @@ const VideoConferenceRoom = () => {
           setMicOn={setMicOn}
           videoOn={videoOn}
           setVideoOn={setVideoOn}
+          micId={micId}
+          setMicId={setMicId}
+          cameraId={cameraId}
+          setCameraId={setCameraId}
+          speakerId={speakerId}
+          setSpeakerId={setSpeakerId}
           onAction={joinRoom} 
           disable={!host && !purchased}
           // passcode={host ? "" : passcode}
@@ -152,12 +169,13 @@ const VideoConferenceRoom = () => {
 }
 export default VideoConferenceRoom;
 
-export const PrepareMeeting = ({user, onAction, actionText, micOn, setMicOn, videoOn, setVideoOn, passcode, disable}) => {
+export const PrepareMeeting = ({user, onAction, actionText, micOn, setMicOn, videoOn, setVideoOn, cameraId, setCameraId, micId, setMicId, speakerId, setSpeakerId, passcode, disable}) => {
   const ref = useRef();
   const { dictionary, language } = useContext(DictionaryContext);
   const [spinner, setSpinner] = useState(false);
   const [init, setInit] = useState(false);
   const [code, setCode] = useState("");
+  const [mediaDevices, setMediaDevices] = useState([]);
 
   const toggleMic = () => {
     if (micOn) {
@@ -165,10 +183,13 @@ export const PrepareMeeting = ({user, onAction, actionText, micOn, setMicOn, vid
       setMicOn(false);
     } else {
       navigator.mediaDevices
-      .getUserMedia({video: false, audio:true})
+      .getUserMedia({video: false, audio:{
+        deviceId: micId
+      }})
       .then(device => {
         addStream(ref, device, "audio")
         setMicOn(true);
+        navigator.mediaDevices.enumerateDevices().then(infos => setMediaDevices(infos));
       })
     }
   }
@@ -178,23 +199,61 @@ export const PrepareMeeting = ({user, onAction, actionText, micOn, setMicOn, vid
       setVideoOn(false);
     } else {
       navigator.mediaDevices
-      .getUserMedia({video: true, audio:false})
+      .getUserMedia({video: {
+        deviceId: cameraId
+      }, audio:false})
       .then(device => {
         addStream(ref, device, "video")
         setVideoOn(true);
+        navigator.mediaDevices.enumerateDevices().then(infos => setMediaDevices(infos));
       })
     }
   }
+  useEffect(() => {
+    setMicOn(false)
+    // if (micId && micOn) {
+    //   navigator.mediaDevices
+    //   .getUserMedia({video: false, audio:{
+    //     deviceId: micId
+    //   }})
+    //   .then(device => {
+    //   console.log("micId, micOn", micId, micOn, device.getAudioTracks()[0].getSettings().deviceId)
+    //     addStream(ref, device, "audio")
+    //   })
+    // }
+  }, [micId])
+  useEffect(() => {
+    if (cameraId && videoOn) {
+      navigator.mediaDevices
+      .getUserMedia({video: {
+        deviceId: cameraId
+      }, audio:false})
+      .then(device => {
+        addStream(ref, device, "video")
+      })
+    }
+  }, [cameraId])
+
+  useEffect(() => {
+    if (speakerId) {
+      navigator.mediaDevices.selectAudioOutput({deviceId:speakerId});
+    }
+  }, [speakerId])
 
   useEffect(() => {
     if (micOn !== undefined || videoOn !== undefined) {
       if (!init) {
         navigator.mediaDevices
-        .getUserMedia({video: videoOn !== undefined, audio: micOn !== undefined})
+        .getUserMedia({video: videoOn !== undefined ? {
+          deviceId: cameraId
+        }:false, audio: micOn !== undefined?{
+          deviceId: micId
+        }:false})
         .then(device => {
           addStream(ref, device)
           setVideoOn(videoOn !== undefined ? true : undefined);
           setMicOn(micOn !== undefined ? true : undefined);
+          navigator.mediaDevices.enumerateDevices().then(infos => setMediaDevices(infos));
         });
       }
       setInit(true);
@@ -216,8 +275,15 @@ export const PrepareMeeting = ({user, onAction, actionText, micOn, setMicOn, vid
           </button>
         </div>
         {micOn && (
-          <div className="voice-detector">
-            <VoiceDetector color="white" count={3}/>
+          <div className={"voice-detector"} key={micId}>
+            <VoiceDetector color="white" count={3} stream={ref.current?.captureStream()}/>
+          </div>
+        )}
+        {mediaDevices.length > 0 && (
+          <div className="device-select">
+            <DeviceSelect list={mediaDevices.filter(m => m.kind === 'audioinput' && m.deviceId.length > 20)} value={micId} setValue={setMicId} icon={<FiMic size={22}/>}/>
+            <DeviceSelect list={mediaDevices.filter(m => m.kind === 'audiooutput' && m.deviceId.length > 20)} value={speakerId} setValue={setSpeakerId} icon={<HiOutlineSpeakerWave size={22}/>}/>
+            <DeviceSelect list={mediaDevices.filter(m => m.kind === 'videoinput' && m.deviceId.length > 20)} value={cameraId} setValue={setCameraId} icon={<BsCameraVideo size={22}/>}/>
           </div>
         )}
       </div>
@@ -240,7 +306,29 @@ export const PrepareMeeting = ({user, onAction, actionText, micOn, setMicOn, vid
   )
 }
 
-export const VoiceDetector = ({gap, color, count, startOnLoad = true, load, onSpeechStart, onSpeechEnd}) => {
+const DeviceSelect = ({list, value, setValue, icon}) => {
+  const [label, setLabel] = useState();
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    if (list.length) {
+      setLabel(list[Math.max(0, list.findIndex(item => item.deviceId === value))]?.label)
+    }
+  }, [list])
+
+  return <div className="select-container" onClick={() => setOpen(prev => !prev)} onMouseLeave={() => setOpen(false)}>
+    <div className="value-container">{icon}<span>{label}</span><MdArrowDropDown size={24}/></div>
+    <div className={`options-container ${open && "open-dropdown"}`}>
+      {list.map(item => (
+        <div key={item.deviceId} className="option" onClick={() => {
+          setValue(item.deviceId)
+          setLabel(item.label)
+        }}> <span>{item.label}</span> {item.label === label && <GiCheckMark color="blue" size={20}/>}</div>
+      ))}
+    </div>
+  </div>
+}
+
+export const VoiceDetector = ({gap, color, count, startOnLoad = true, load, onSpeechStart, onSpeechEnd, stream}) => {
   const [loading, setLoading] = useState(false);
   useMicVAD({
     model: "v5",
@@ -249,6 +337,7 @@ export const VoiceDetector = ({gap, color, count, startOnLoad = true, load, onSp
     baseAssetPath: "https://cdn.jsdelivr.net/npm/@ricky0123/vad-web@0.0.21/dist/",
     onnxWASMBasePath: "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.19.2/dist/",
     minSpeechFrames: 1,
+    stream,
     onSpeechStart: () => {
       setLoading(true);
       onSpeechStart && onSpeechStart();
@@ -258,6 +347,7 @@ export const VoiceDetector = ({gap, color, count, startOnLoad = true, load, onSp
       onSpeechEnd && onSpeechEnd();
     },
   });
+  
   return (
     <div
       className={`voice-detector-container ${loading || load ? "loading":""}`}
