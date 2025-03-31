@@ -78,7 +78,7 @@ const VideoConferenceRoom = () => {
     if (course && userData.info) {
       const host = course.instructor.email === userData.info.email;
       setHost(host);
-      peer.current = new Peer(host ? roomId : v4(), { host: PEERJS_SERVER });
+      peer.current = new Peer(host ? roomId : v4(), { host: PEERJS_SERVER, secure: true });
     }
   }, [course, userData.info]);
 

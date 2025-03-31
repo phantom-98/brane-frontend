@@ -6,5 +6,5 @@ export const FRONT = "https://apenox.com/";
 
 // export const PEERJS_SERVER="localhost"
 // export const SOCKETIO_SERVER="http://localhost:5000"
-export const PEERJS_SERVER="0.peerjs.com"
+export const PEERJS_SERVER="peerjs.apenox.com"
 export const SOCKETIO_SERVER="https://api.apenox.com"
