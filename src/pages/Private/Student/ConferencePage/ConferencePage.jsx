@@ -36,6 +36,7 @@ function ConferencePage() {
   const [reviews, setReviews] = useState(null);
   const [instructor, setInstructor] = useState(null);
   const [joinData, setJoinData] = useState(null);
+  const [spinner, setSpinner] = useState(false);
 
   useEffect(() => {
     // Main data
@@ -146,7 +147,7 @@ function ConferencePage() {
                         <span>{dictionary.conferencePage[6][language]}</span>
                       </div>
                     ) : (
-                      <div className="box">
+                      <div className="box" style={{position: 'relative'}}>
                         <strong>{dictionary.conferencePage[19][language]}:</strong>
                         <span>{dictionary.conferencePage[20][language]}</span>
                         <button
@@ -156,13 +157,22 @@ function ConferencePage() {
                               toast.error(dictionary.conferencePage[25][language]);
                               return;
                             }
+                            setSpinner(true);
                             downloadVideo(joinData.meetingNumber, conference.slug)
-                            .then(res => toast.success("success"))
-                            .catch(err => toast.error(err.message));
+                            .then(res => {
+                              setSpinner(false)
+                              toast.success("success")
+                            })
+                            .catch(err => {
+                              setSpinner(false)
+                              toast.error(err.message)
+                            });
                           }}
+                          disabled={spinner}
                         >
                           {dictionary.conferencePage[21][language]}
                         </button>
+                        {spinner && <SpinnerOfDoom inner/>}
                       </div>
                     )}
                   </div>

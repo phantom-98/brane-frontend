@@ -5,7 +5,7 @@ import "./SpinnerOfDoom.scss";
 import { Sync } from "../../assets/icons";
 import { DictionaryContext } from "../../contexts/DictionaryContext";
 
-const SpinnerOfDoom = ({ standalone, center, full, top }) => {
+const SpinnerOfDoom = ({ standalone, center, full, top, inner }) => {
   const { dictionary, language } = useContext(DictionaryContext);
   const [dots, setDots] = useState([]);
 
@@ -31,7 +31,7 @@ const SpinnerOfDoom = ({ standalone, center, full, top }) => {
     <div
       className={`spinner-of-doom ${standalone ? "standalone" : ""} ${center ? "center" : ""} ${full ? "full" : ""} ${
         top ? "top" : ""
-      }`}
+      } ${inner ? "inner" : ""}`}
     >
       <Sync />
       {standalone && (

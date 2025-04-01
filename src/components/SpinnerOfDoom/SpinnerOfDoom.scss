@@ -63,4 +63,17 @@
     min-height: calc(var(--unit) * 100);
     margin-bottom: 0;
   }
+
+  &.inner {
+    transform: translate(0, -10%);
+    width: 120%;
+    height: 120%;
+    position: absolute;
+    backdrop-filter: blur(5px);
+
+    svg {
+      height: 2rem;
+      color: $gray
+    }
+  }
 }
