@@ -182,6 +182,7 @@
 
       .dynamic-input {
         max-width: 16rem;
+        height: fit-content;
       }
 
       @media screen and (min-width: $tablet-sm) {

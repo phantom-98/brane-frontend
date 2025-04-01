@@ -280,16 +280,17 @@ const CoursePage = () => {
                     <span>{currentCourse.cantidadEstudiantes} {dictionary.coursePage[14][language]}</span>
                   </div>
                 </div>
-                  {
-                    currentCourse.conference && (
-                      <div className="technical-details" style={{display: "flex"}}>
-                        <Link className="detail" to={`/conference/join/${currentCourse.conference.ZoomMeetingID}`} target="_blank">
-                          <Videocam />
-                          <span>{dictionary.coursePage[33][language]}</span>
-                        </Link>
-                      </div>
-                    )
-                  }
+
+                {
+                  !userData.institution && courseMadeByMe && currentCourse.tipo === "conferencia" && (
+                    <div className="technical-details" style={{display: "flex"}}>
+                      <Link className="detail" to={`/conference/${currentCourse.slug}`}>
+                        <Videocam />
+                        <span>{dictionary.coursePage[33][language]}</span>
+                      </Link>
+                    </div>
+                  )
+                }
 
                 <Tabulation tabs={[dictionary.coursePage[15][language], dictionary.coursePage[16][language]]} options={{ type: "bubble", color: "black" }}>
                   <>
@@ -353,7 +354,7 @@ const CoursePage = () => {
                         <>
                           <li>
                             <Videocam />
-                            {dictionary.coursePage[23][language]}: {currentCourse.conference.ZoomDuration} min
+                            {dictionary.coursePage[23][language]}: {currentCourse.conference.Duration} min
                           </li>
                         </>
                       ) : (

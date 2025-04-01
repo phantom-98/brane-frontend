@@ -1,13 +1,14 @@
 import "./Languages.scss";
 import {
   Globe,
+  GlobeWhite,
   US,
   ES,
 } from "../../assets/icons";
 import { useContext } from "react";
 import { DictionaryContext } from "../../contexts/DictionaryContext";
 
-const Languages = ({border = true, margin = true}) => {
+const Languages = ({border = true, margin = true, mode="dark"}) => {
   const { toggleLanguage, language } =
     useContext(DictionaryContext);
 
@@ -27,7 +28,7 @@ const Languages = ({border = true, margin = true}) => {
   return (
     <div className={`languages-selector ${!border && "circle"}`} style={{ marginInline: margin ? "" : "0rem"}}>
       <div className="menu">
-        <Globe/>
+        {mode === 'dark' ? <Globe/> : <GlobeWhite/>}
       </div>
       <div className="dropdown">
         {langList.map((item, index) => (

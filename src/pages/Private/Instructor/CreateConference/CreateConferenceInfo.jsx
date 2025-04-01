@@ -38,6 +38,7 @@ const CreateConferenceInfo = () => {
     precio: 0,
     status: "",
     duration: 0,
+    storingTime: 14,
     certificado: false,
     password: "",
     start: "",
@@ -218,6 +219,7 @@ const CreateConferenceInfo = () => {
         precio: inputs.precio,
         certificado: false,
         duracion: inputs.duration,
+        storingTime: inputs.storingTime,
         status: "draft",
         tipo: "conferencia",
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -253,6 +255,8 @@ const CreateConferenceInfo = () => {
       toast.error(dictionary.privateInstructor.createConference[6][language]);
     } else if (inputs.duration === 0) {
       toast.error(dictionary.privateInstructor.createConference[7][language]);
+    } else if (inputs.storingTime === 0) {
+      toast.error(dictionary.privateInstructor.createConference[67][language]);
     } else if (inputs.start === "") {
       toast.error(dictionary.privateInstructor.createConference[8][language]);
     } else if (inputs.password === "") {
@@ -362,6 +366,12 @@ const CreateConferenceInfo = () => {
           <h3>{dictionary.privateInstructor.createConference[32][language]}</h3>
           <DynamicInput id={"duration"} state={[inputs, setInputs]} type="number" number />
           <p className="hint">{dictionary.privateInstructor.createConference[33][language]}</p>
+        </>
+
+        <>
+          <h3>{dictionary.privateInstructor.createConference[65][language]}</h3>
+          <DynamicInput id={"storingTime"} state={[inputs, setInputs]} type="number" number />
+          <p className="hint">{dictionary.privateInstructor.createConference[66][language]}</p>
         </>
 
         <>

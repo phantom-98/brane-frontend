@@ -1046,6 +1046,15 @@ const dictionary = {
         es: "Contraseña invalida. La contraseña debe tener solo letras, números, guion bajo, guion medio o punto. Máximo 10 caracteres",
         en: "Invalid password. The password must contain only letters, numbers, underscore, hyphen, or period. Maximum 10 characters",
       },
+      { es: "Tiempo de almacenamiento", en: "Storing Time" },
+      { 
+        es: "Este es el tiempo en días que un video grabado se almacenará en el servidor.", 
+        en: "This is the time duration in days for a recorded video will be stored on server" 
+      },
+      {
+        es: "Debes especificar el tiempo de almacenamiento de la conferencia.",
+        en: "You must specify the storing time of the conference.",
+      },
     ],
     createCoupons: [
       { es: "Descuento", en: "Discount" },
@@ -1663,7 +1672,7 @@ const dictionary = {
     { es: "Compra este curso para ver su contenido", en: "Buy this course to see its content" },
     { es: "Ir al carrito", en: "Go to cart" },
     { es: "Añadir al carrito", en: "Add to cart" },
-    { es: "Haga clic aquí para unirse a la conferencia", en: "Click here to join the conference"}
+    { es: "Haga clic aquí para ir a la conferencia", en: "Click here to go to the conference"}
   ],
   editProfilePage: [
     { es: "Tus datos han sido actualizados exitosamente", en: "Your data has been successfully updated" },
@@ -1815,6 +1824,13 @@ const dictionary = {
     { es: "Reseñas", en: "Reviews" },
     { es: "Su nombre", en: "Your name" },
     { es: "¡No puedes acceder a esta reunión!", en: "You can't access this meeting!" },
+    { es: "Acta de la conferencia", en: "Conference record" },
+    { es: "Esta conferencia ya ha finalizado y podéis ver el vídeo grabado.", en: "This conference is already finished and you can see the recorded video." },
+    { es: "Descargar la conferencia", en: "Download the conference" },
+    { es: "Unirse a la conferencia", en: "Join conference"},
+    { es: "Esta conferencia se está grabando ahora.", en: "This conference is recording now."},
+    { es: "Esta conferencia no se está grabando.", en: "This conference is not recording."},
+    { es: "El vídeo grabado no está disponible.", en: "Recorded video is not available."}
   ],
   learnPage: [
     { es: "Lección", en: "Lesson" },

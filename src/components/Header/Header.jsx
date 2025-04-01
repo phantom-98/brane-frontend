@@ -108,7 +108,7 @@ const Header = ({ black, title, progress }) => {
           </>
         )}
 
-        <Languages border={false} />
+        <Languages border={false} mode="light"/>
 
         <HeaderDropdown
           greetingText={greetingText}

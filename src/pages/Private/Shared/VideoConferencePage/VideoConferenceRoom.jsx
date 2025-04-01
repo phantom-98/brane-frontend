@@ -35,6 +35,7 @@ const VideoConferenceRoom = () => {
   const [purchasedCourses, setPurchasedCourses] = useState();
   const [host, setHost] = useState();
   const [purchased, setPurchased] = useState();
+  const [finished, setFinished] = useState(true);
   const [passcode, setPasscode] = useState("");
 
   const joinRoom = () => {
@@ -49,7 +50,8 @@ const VideoConferenceRoom = () => {
     const { ok, data } = await getCourseByLink(roomId);
     if (ok) {
       setCourse(data.data);
-      setPasscode(data.data.conference.ZoomPassword);
+      setFinished(!['scheduled', 'in_progress'].includes(data.data.conference.state));
+      setPasscode(data.data.conference.Password);
     }
   }
   const getPurchasedCourses = async () => {
@@ -97,7 +99,7 @@ const VideoConferenceRoom = () => {
 
   useEffect(() => {
     if (host === false && purchased === false) {
-      toast.warning(dictionary.conferencePage[18][language])
+      toast.warn(dictionary.conferencePage[18][language])
     }
   }, [host, purchased]);
   
@@ -142,9 +144,9 @@ const VideoConferenceRoom = () => {
           videoOn={videoOn}
           setVideoOn={setVideoOn}
           onAction={joinRoom} 
-          disable={!host && !purchased}
+          disable={finished || (!host && !purchased)}
           // passcode={host ? "" : passcode}
-          actionText={"Join conference"}
+          actionText={dictionary.conferencePage[22][language]}
         />
       )}
     </div>
